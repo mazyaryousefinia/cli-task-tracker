@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -64,6 +65,45 @@ func runCommand(command string) {
 
 	}
 
+}
+
+func getTasks() []Task {
+	f, err := os.OpenFile("./tasks.json", os.O_RDONLY, 0444)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	decoder := json.NewDecoder(f)
+
+	var tasks []Task
+
+	err = decoder.Decode(&tasks)
+
+	if err != nil {
+		panic(err)
+	}
+	return tasks
+}
+
+func saveTasks(tasks []Task) {
+
+	f, err := os.OpenFile("./tasks.json", os.O_RDWR|os.O_TRUNC, 0644)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	encoder := json.NewEncoder(f)
+	encoder.SetIndent("", "  ")
+
+	err = encoder.Encode(tasks)
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 func addTask() {}
