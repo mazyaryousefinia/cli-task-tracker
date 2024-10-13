@@ -106,7 +106,27 @@ func saveTasks(tasks []Task) {
 	}
 }
 
-func addTask() {}
+func addTask() {
+	var description string
+	fmt.Println("Please enter task description")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	description = scanner.Text()
+
+	tasks := []Task(getTasks())
+	now := time.Now().UTC()
+	task := Task{
+		ID:          len(tasks) + 1,
+		Description: description,
+		Status:      StatusTodo,
+		CreatedAt:   now,
+		UpdatedAt:   now,
+	}
+	tasks = append(tasks, task)
+	saveTasks(tasks)
+	fmt.Println("Task Created Successfully")
+
+}
 
 func updateTask() {}
 
