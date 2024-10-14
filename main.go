@@ -36,6 +36,9 @@ func main() {
 	for {
 		runCommand(*command)
 
+		fmt.Println("-------------------------")
+		fmt.Println("Please enter new command")
+
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		*command = scanner.Text()
@@ -64,6 +67,18 @@ func runCommand(command string) {
 		os.Exit(0)
 
 	}
+
+}
+
+func getId() int {
+	tasks := getTasks()
+
+	if len(tasks) == 0 {
+		return 1
+	}
+	lastItem := tasks[len(tasks)-1]
+
+	return lastItem.ID + 1
 
 }
 
@@ -153,7 +168,7 @@ func addTask() {
 	tasks := []Task(getTasks())
 	now := time.Now().UTC()
 	task := Task{
-		ID:          len(tasks) + 1,
+		ID:          getId(),
 		Description: description,
 		Status:      StatusTodo,
 		CreatedAt:   now,
