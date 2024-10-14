@@ -3,9 +3,11 @@ package main
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -106,6 +108,20 @@ func saveTasks(tasks []Task) {
 	}
 }
 
+func updateTaskById(taskId int, description string) ([]Task, error) {
+	tasks := getTasks()
+
+	for i := range tasks {
+		if tasks[i].ID == taskId {
+			tasks[i].Description = description
+			now := time.Now().UTC()
+			tasks[i].UpdatedAt = now
+			return tasks, nil
+		}
+	}
+	return tasks, errors.New("Cant find task")
+}
+
 func addTask() {
 	var description string
 	fmt.Println("Please enter task description")
@@ -128,7 +144,29 @@ func addTask() {
 
 }
 
-func updateTask() {}
+func updateTask() {
+	var description string
+
+	fmt.Println("Please enter tasks id")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	taskId, err := strconv.Atoi(scanner.Text())
+	if err != nil {
+		fmt.Println("error on entering task id")
+	}
+
+	fmt.Println("Please enter tasks new description")
+	scanner.Scan()
+	description = scanner.Text()
+	tasks, err := updateTaskById(taskId, description)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	saveTasks(tasks)
+	fmt.Println("Task update successfully")
+
+}
 
 func deleteTask() {}
 
