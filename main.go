@@ -122,6 +122,16 @@ func updateTaskById(taskId int, description string) ([]Task, error) {
 	return tasks, errors.New("Cant find task")
 }
 
+func deleteTaskById(taskId int) ([]Task, error) {
+	tasks := getTasks()
+	for i, task := range tasks {
+		if task.ID == taskId {
+			tasks = append(tasks[:i], tasks[i+1:]...)
+			return tasks, nil
+		}
+	}
+	return tasks, errors.New("task not found")
+}
 func addTask() {
 	var description string
 	fmt.Println("Please enter task description")
@@ -168,7 +178,25 @@ func updateTask() {
 
 }
 
-func deleteTask() {}
+func deleteTask() {
+	fmt.Println("Please enter the task id to delete")
+
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	taskId, err := strconv.Atoi(scanner.Text())
+	if err != nil {
+		panic("error on entering task id")
+	}
+
+	tasks, err := deleteTaskById(taskId)
+	if err != nil {
+		panic(err)
+	}
+
+	saveTasks(tasks)
+	fmt.Println("Task deleted successfully")
+
+}
 
 func markTask() {}
 
