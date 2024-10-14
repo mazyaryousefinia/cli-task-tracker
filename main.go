@@ -52,10 +52,8 @@ func runCommand(command string) {
 		updateTask()
 	case "delete":
 		deleteTask()
-	case "mark-in-progress":
-		markTask()
-	case "mark-done":
-		doneTask()
+	case "update-status":
+		updateTaskStatus()
 	case "list":
 		listTask()
 	case "exit":
@@ -120,6 +118,19 @@ func updateTaskById(taskId int, description string) ([]Task, error) {
 		}
 	}
 	return tasks, errors.New("Cant find task")
+}
+
+func updateTaskStatusById(taskId int, status Status) ([]Task, error) {
+	tasks := getTasks()
+	for i, task := range tasks {
+		if task.ID == taskId {
+			tasks[i].Status = status
+			now := time.Now().UTC()
+			tasks[i].UpdatedAt = now
+			return tasks, nil
+		}
+	}
+	return tasks, errors.New("cant find task")
 }
 
 func deleteTaskById(taskId int) ([]Task, error) {
@@ -198,8 +209,28 @@ func deleteTask() {
 
 }
 
-func markTask() {}
+func updateTaskStatus() {
 
-func doneTask() {}
+	scanner := bufio.NewScanner(os.Stdin)
+
+	fmt.Println("Please enter task id")
+	scanner.Scan()
+	taskId, err := strconv.Atoi(scanner.Text())
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Please enter new status")
+	scanner.Scan()
+	newStatus := Status(scanner.Text())
+
+	tasks, err := updateTaskStatusById(taskId, newStatus)
+	if err != nil {
+		panic(err)
+	}
+
+	saveTasks(tasks)
+	fmt.Println("Task status updated successfully")
+}
 
 func listTask() {}
