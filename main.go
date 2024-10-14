@@ -233,4 +233,14 @@ func updateTaskStatus() {
 	fmt.Println("Task status updated successfully")
 }
 
-func listTask() {}
+func listTask() {
+	tasks := getTasks()
+	for _, task := range tasks {
+		fmt.Printf("ID: %d\n", task.ID)
+		fmt.Printf("Description: %s\n", task.Description)
+		fmt.Printf("Status: %s\n", task.Status)
+		fmt.Printf("Created At: %s\n", task.CreatedAt.Format(time.RFC3339))
+		fmt.Printf("Updated At: %s\n", task.UpdatedAt.Format(time.RFC3339))
+		fmt.Println("------------------------")
+	}
+}
