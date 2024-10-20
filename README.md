@@ -2,6 +2,8 @@
 
 A simple command-line task management application built with Go.
 
+Sample solution for the [task-tracker](https://roadmap.sh/projects/task-tracker) challenge from [roadmap.sh](https://roadmap.sh/).
+
 ## Overview
 Manage your tasks efficiently with basic CRUD operations and persistent JSON storage.
 
